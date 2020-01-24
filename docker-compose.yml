@@ -1,0 +1,34 @@
+version: "3"
+
+services:
+  proxy:
+    image: nginx:1.15-alpine
+    hostname: proxy
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+    links:
+      - back
+      - front
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - nginx:/etc/nginx/conf.d
+      - letsencrypt:/etc/letsencrypt
+      - certbot:/var/www/certbot
+  certbot:
+    image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot:/var/www/certbot
+  back:
+    image: isapozhkov/dp-interview-server
+    hostname: backend
+  front:
+    image: isapozhkov/dp-interview-client
+    hostname: frontend
+
+volumes:
+  nginx: {}
+  letsencrypt: {}
+  certbot: {}

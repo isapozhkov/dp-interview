@@ -1,0 +1,6 @@
+[submodule "dp-interview-client"]
+	path = dp-interview-client
+	url = https://github.com/isapozhkov/dp-interview-client.git
+[submodule "dp-interview-server"]
+	path = dp-interview-server
+	url = https://github.com/isapozhkov/dp-interview-server.git
